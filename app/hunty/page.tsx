@@ -480,7 +480,10 @@ export default function CreateGame() {
                       Share Link/Generate QR Code
                     </label>
                     <div className="flex gap-2">
-                      <Button className="bg-gradient-to-b from-[#3737A4] to-[#0C0C4F]  hover:bg-slate-700 text-white px-4 py-2 rounded-full flex items-center gap-2">
+                      <Button
+                        onClick={handleShare}
+                        className="bg-gradient-to-b from-[#3737A4] to-[#0C0C4F]  hover:bg-slate-700 text-white px-4 py-2 rounded-full flex items-center gap-2"
+                      >
                         <Share />
                         Share Now
                       </Button>
