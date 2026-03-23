@@ -12,6 +12,7 @@ import { dynapuff } from "@/lib/font"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ArrowLeft, ArrowRight, Plus, QrCode, Download, Printer } from "lucide-react"
+import { QrCodeModal } from "@/components/QrCodeModal"
 import { Header } from "@/components/Header"
 import { CreateGameTabs } from "@/components/CreateGameTabs"
 import { HuntForm } from "@/components/HuntForm"
@@ -380,11 +381,12 @@ export default function CreateGame() {
                         <Share />
                         Share Now
                       </Button>
-                      <Button size="icon" variant="outline" className="rounded-lg border-1 border-transparent bg-white bg-clip-padding shadow-sm hover:bg-slate-50 [background:linear-gradient(white,white)_padding-box,linear-gradient(to_bottom,#3737A4,#0C0C4F)_border-box]">
+                      <Button size="icon" variant="outline" className="rounded-lg border-1 border-transparent bg-white bg-clip-padding shadow-sm hover:bg-slate-50 [background:linear-gradient(white,white)_padding-box,linear-gradient(to_bottom,#3737A4,#0C0C4F)_border-box]" onClick={() => setQrOpen(true)} title="Show QR Code">
                         <QrCode className="w-4 h-4 text-[#0C0C4F]" />
                       </Button>
                     </div>
                   </div>
+      <QrCodeModal open={qrOpen} onClose={() => setQrOpen(false)} url={typeof window !== "undefined" ? window.location.href : ""} />
 
                   <div className="flex items-center justify-between mb-16">
                     <label className="block text-xl font-normal text-[#808080]">Save As Image</label>
