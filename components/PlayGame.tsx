@@ -13,7 +13,7 @@ import { HuntCards } from "./HuntCards";
 import { get_hunt, get_clue_info } from "@/lib/contracts/hunt";
 
 // ✅ Import PlayerProgressPanel for progress display
-import { PlayerProgressPanel } from "./PlayerProgressPanel";
+import { PlayerProgressPanel } from "@/components/PlayerProgressPanel";
 
 interface Hunt {
   id: number;
@@ -114,7 +114,7 @@ export function PlayGame({
 
   const handleScoreUpdate = (points: number) => {
     setScore((prev) => prev + points);
-    setSolvedCount((prev) => prev + 1);
+    // ✅ Removed setSolvedCount; solvedCount is derived from solvedClues
   };
 
   const handleClueUnlock = (clueIndex: number) => {
