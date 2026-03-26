@@ -3,7 +3,6 @@ import type { Metadata } from "next"
 import "./globals.css"
 import { hankenGrotesk } from "@/lib/font"
 import { TxToaster } from "@/components/TxToaster"
-import { SorobanProvider } from "@/lib/soroban/SorobanContext"
 import Providers from "./providers"
 
 export const metadata: Metadata = {

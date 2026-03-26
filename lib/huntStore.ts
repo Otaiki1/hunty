@@ -115,7 +115,7 @@ export function getCreatorHunts(): StoredHunt[] {
 }
 
 /** Get hunts by creator public key (mock implementation) */
-export function getHuntsByCreator(publicKey?: string): StoredHunt[] {
+export function getHuntsByCreator(): StoredHunt[] {
   return readHunts()
 }
 

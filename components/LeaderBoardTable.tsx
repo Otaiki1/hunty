@@ -1,6 +1,6 @@
 "use client"
 
-import { ReactNode, useEffect, useState, useCallback } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { get_hunt_leaderboard } from "@/lib/contracts/hunt"
 import Medal from "@/components/icons/Medal"

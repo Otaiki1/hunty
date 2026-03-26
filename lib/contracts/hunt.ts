@@ -333,7 +333,7 @@ export async function get_hunt_leaderboard(huntId: number): Promise<LeaderboardE
         }
       }
     } catch (e) {
-      // ignore
+      console.error("Failed to fetch leaderboard:", e)
     }
   }
 
@@ -381,7 +381,7 @@ export async function get_clue_info(huntId: number, clueId: number): Promise<Clu
       try {
         localStorage.setItem(`hunt_clue_start_${huntId}_${clue.id}`, Date.now().toString())
       } catch (e) {
-        // ignore
+        console.error("Failed to set start time:", e)
       }
     }
 
@@ -440,7 +440,7 @@ export async function submitAnswer(
         localStorage.setItem(solvedKey, "true");
       }
     } catch (e) {
-      // ignore
+      console.error("Failed to submit answer:", e)
     }
   }
 
