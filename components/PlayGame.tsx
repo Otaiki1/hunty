@@ -14,7 +14,7 @@ import { get_clue_info, get_hunt } from "@/lib/contracts/hunt";
 import { HuntCards } from "./HuntCards";
 import Replay from "./icons/Replay";
 import Share from "./icons/Share";
-import type { HuntCard as Hunt } from "@/lib/types";
+import type { HuntCard as Hunt, HuntInfo } from "@/lib/types";
 
 interface PlayGameProps {
   hunts: Hunt[];
@@ -40,7 +40,7 @@ export function PlayGame({
   const solvedCount = solvedClues.size;
 
   const {
-    data: fetchedClues = null,
+    data: fetched = null as null | { clues: Hunt[]; huntInfo: HuntInfo },
     isLoading: loading,
     error: queryError,
     refetch,
@@ -64,7 +64,7 @@ export function PlayGame({
           hintCost: clue.hintCost,
         });
       }
-      return clues;
+      return { clues, huntInfo };
     },
     enabled: huntId != null,
   });
@@ -83,7 +83,9 @@ export function PlayGame({
     }
   }, [error]);
 
-  const hunts = huntId != null ? fetchedClues ?? [] : fetchedClues ?? huntsProp;
+  const fetchedClues = fetched?.clues ?? null;
+  const huntInfo = fetched?.huntInfo ?? null;
+  const hunts = huntId != null ? (fetchedClues ?? []) : (huntsProp ?? []);
   const hasHunts = hunts.length > 0;
 
   const handleScoreUpdate = (points: number) => {
@@ -100,14 +102,14 @@ export function PlayGame({
       setCurrentCardIndex(clueIndex + 1);
     } else {
       // Hunt completed! Trigger notification if enabled
-      if (huntId && huntMetadata?.emailNotifications && huntMetadata?.creatorEmail) {
+      if (huntId && huntInfo?.emailNotifications && huntInfo?.creatorEmail) {
         fetch("/api/notifications/complete", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             huntId,
             huntName: gameName,
-            creatorEmail: huntMetadata.creatorEmail,
+            creatorEmail: huntInfo.creatorEmail,
             completionTime: new Date().toLocaleString(),
           }),
         }).catch((err) => console.error("Failed to send notification:", err));

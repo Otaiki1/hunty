@@ -5,13 +5,16 @@ import { Input } from "@/components/ui/input"
 import ToggleSwitch from "./ToggleButton"
 import { Minus, Plus, Trash2, Eye, EyeOff } from "lucide-react"
 import { ChangeEvent, useRef, useState } from "react"
+import { Controller, useFieldArray, useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
 import { addClue } from "@/lib/contracts/hunt"
 import { saveClueLocally } from "@/lib/huntStore"
 import { withTransactionToast } from "@/lib/txToast"
 import { uploadToIPFS } from "@/lib/ipfs"
 import { toast } from "sonner"
 import { HuntCards } from "./HuntCards"
-import type { HuntCard, ClueRow } from "@/lib/types"
+import type { HuntCard } from "@/lib/types"
 
 interface HuntFormProps {
   hunt: HuntCard
