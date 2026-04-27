@@ -37,7 +37,7 @@ function ActivityItem({ event }: { event: ActivityEvent }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 12 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
-      className="flex items-center gap-3 py-2.5 px-4 rounded-xl bg-white/70 border border-slate-100 shadow-sm hover:shadow-md transition-shadow"
+      className="flex items-center gap-3 py-2.5 px-4 rounded-xl bg-white/70 dark:bg-slate-900/70 border border-slate-100 dark:border-white/5 shadow-sm hover:shadow-md transition-shadow backdrop-blur-sm"
     >
       {/* Icon */}
       <div
@@ -56,17 +56,17 @@ function ActivityItem({ event }: { event: ActivityEvent }) {
 
       {/* Text */}
       <div className="min-w-0 flex-1">
-        <p className="text-sm text-slate-800 truncate">
-          <span className="font-semibold text-[#3737A4]">
+        <p className="text-sm text-slate-800 dark:text-slate-200 truncate">
+          <span className="font-semibold text-[#3737A4] dark:text-blue-400">
             {anonymizeAddress(event.address)}
           </span>{" "}
           {isCompleted ? "completed" : "solved a clue in"}{" "}
-          <span className="font-medium text-slate-700 italic">{event.huntTitle}</span>
+          <span className="font-medium text-slate-700 dark:text-slate-300 italic">{event.huntTitle}</span>
         </p>
       </div>
 
       {/* Time */}
-      <span className="shrink-0 text-[11px] text-slate-400 tabular-nums">
+      <span className="shrink-0 text-[11px] text-slate-400 dark:text-slate-500 tabular-nums">
         {relativeTime(event.timestamp)}
       </span>
     </motion.div>
@@ -75,12 +75,12 @@ function ActivityItem({ event }: { event: ActivityEvent }) {
 
 function SkeletonItem() {
   return (
-    <div className="flex items-center gap-3 py-2.5 px-4 rounded-xl bg-white/60 border border-slate-100 animate-pulse">
-      <div className="w-7 h-7 rounded-full bg-slate-200 shrink-0" />
+    <div className="flex items-center gap-3 py-2.5 px-4 rounded-xl bg-white/60 dark:bg-slate-900/60 border border-slate-100 dark:border-white/5 animate-pulse">
+      <div className="w-7 h-7 rounded-full bg-slate-200 dark:bg-slate-800 shrink-0" />
       <div className="flex-1 space-y-1.5">
-        <div className="h-3 w-3/4 bg-slate-200 rounded" />
+        <div className="h-3 w-3/4 bg-slate-200 dark:bg-slate-800 rounded" />
       </div>
-      <div className="w-10 h-3 bg-slate-200 rounded" />
+      <div className="w-10 h-3 bg-slate-200 dark:bg-slate-800 rounded" />
     </div>
   )
 }
@@ -169,7 +169,7 @@ export function GlobalActivityFeed({
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
           <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500" />
         </span>
-        <h2 className="text-sm font-semibold text-slate-700 tracking-wide uppercase">
+        <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 tracking-wide uppercase">
           Live Activity
         </h2>
         {loading && (
@@ -182,7 +182,7 @@ export function GlobalActivityFeed({
 
       {/* Feed */}
       <div
-        className="space-y-2 max-h-72 overflow-y-auto pr-0.5 scrollbar-thin scrollbar-thumb-slate-200"
+        className="space-y-2 max-h-72 overflow-y-auto pr-0.5 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800"
         data-testid="activity-feed"
       >
         {loading && events.length === 0 ? (
@@ -192,7 +192,7 @@ export function GlobalActivityFeed({
             <SkeletonItem />
           </>
         ) : events.length === 0 ? (
-          <div className="text-center py-6 text-slate-500 text-sm">
+          <div className="text-center py-6 text-slate-500 dark:text-slate-400 text-sm">
             No activity yet — be the first to complete a hunt!
           </div>
         ) : (
