@@ -29,10 +29,10 @@ interface HuntDashboardProps {
 function StatusBadge({ status }: { status: StoredHunt["status"] }) {
   const styles =
     status === "Active"
-      ? "bg-emerald-100 text-emerald-800 border-emerald-200"
+      ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/50"
       : status === "Completed"
-        ? "bg-slate-100 text-slate-700 border-slate-200"
-        : "bg-amber-100 text-amber-800 border-amber-200"
+        ? "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700"
+        : "bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-400 border-amber-200 dark:border-amber-800/50"
   return (
     <span
       className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium ${styles}`}
@@ -148,7 +148,7 @@ export function HuntDashboard({ hunts, onActivate, onRefresh, onSaveClues }: Hun
 
   return (
     <>
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-4">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 dark:border-white/10 pb-4">
         <div className="flex items-center gap-2">
           <Checkbox
             id="select-all"
@@ -157,7 +157,7 @@ export function HuntDashboard({ hunts, onActivate, onRefresh, onSaveClues }: Hun
           />
           <label
             htmlFor="select-all"
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 dark:text-slate-300"
           >
             Select All
           </label>
@@ -165,10 +165,10 @@ export function HuntDashboard({ hunts, onActivate, onRefresh, onSaveClues }: Hun
 
         {selectedIds.size > 0 && (
           <div className="flex items-center gap-3 animate-in fade-in slide-in-from-top-2">
-            <span className="text-sm font-medium text-slate-500">
+            <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
               {selectedIds.size} selected
             </span>
-            <div className="h-4 w-[1px] bg-slate-200" />
+            <div className="h-4 w-[1px] bg-slate-200 dark:bg-white/10" />
             <Button
               size="sm"
               variant="outline"
@@ -211,8 +211,8 @@ export function HuntDashboard({ hunts, onActivate, onRefresh, onSaveClues }: Hun
               key={hunt.id}
               className={`group relative overflow-hidden rounded-2xl border transition-all ${
                 selectedIds.has(hunt.id)
-                  ? "border-blue-400 bg-blue-50/30 ring-1 ring-blue-400"
-                  : "border-slate-200 bg-white hover:border-slate-300 shadow-sm"
+                  ? "border-blue-400 dark:border-blue-500 bg-blue-50/30 dark:bg-blue-900/10 ring-1 ring-blue-400 dark:ring-blue-500"
+                  : "border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-white/20 shadow-sm"
               }`}
             >
               <div className="absolute right-3 top-3 z-10">
@@ -220,7 +220,7 @@ export function HuntDashboard({ hunts, onActivate, onRefresh, onSaveClues }: Hun
                   checked={selectedIds.has(hunt.id)}
                   onCheckedChange={() => toggleSelect(hunt.id)}
                   onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                  className="h-5 w-5 rounded-md border-slate-300"
+                  className="h-5 w-5 rounded-md border-slate-300 dark:border-white/20"
                   aria-label={`Select hunt ${hunt.title}`}
                 />
               </div>
@@ -228,21 +228,21 @@ export function HuntDashboard({ hunts, onActivate, onRefresh, onSaveClues }: Hun
               <div className="p-5">
                 <div className="mb-2 flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <CardTitle className="line-clamp-2 text-lg">{hunt.title}</CardTitle>
-                    <div className="flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded-md text-xs text-slate-500 font-mono">
+                    <CardTitle className="line-clamp-2 text-lg dark:text-white">{hunt.title}</CardTitle>
+                    <div className="flex items-center gap-1 bg-slate-100 dark:bg-white/5 px-2 py-0.5 rounded-md text-xs text-slate-500 dark:text-slate-400 font-mono">
                       #{hunt.id}
-                      <button onClick={(e) => handleCopyId(e, hunt.id)} className="hover:text-slate-800 transition-colors">
+                      <button onClick={(e) => handleCopyId(e, hunt.id)} className="hover:text-slate-800 dark:hover:text-white transition-colors">
                         <Copy className="w-3 h-3" />
                       </button>
                     </div>
                   </div>
                   <StatusBadge status={hunt.status} />
                 </div>
-                <CardDescription className="mb-4 line-clamp-3 text-sm text-slate-600">
+                <CardDescription className="mb-4 line-clamp-3 text-sm text-slate-600 dark:text-slate-400">
                   {hunt.description}
                 </CardDescription>
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="text-xs text-slate-500">
+                  <span className="text-xs text-slate-500 dark:text-slate-400">
                     {hunt.cluesCount} {hunt.cluesCount === 1 ? "clue" : "clues"}
                   </span>
                   <div className="flex gap-2">
@@ -304,14 +304,14 @@ export function HuntDashboard({ hunts, onActivate, onRefresh, onSaveClues }: Hun
 
       {/* Leaderboard Modal */}
       <Dialog open={!!leaderboardHunt} onOpenChange={(open) => !open && setLeaderboardHunt(null)}>
-        <DialogContent showCloseButton className="sm:max-w-2xl bg-[#f9f9ff]">
+        <DialogContent showCloseButton className="sm:max-w-2xl bg-[#f9f9ff] dark:bg-slate-950">
           <DialogHeader className="mb-4">
             <DialogTitle className="text-2xl font-bold bg-gradient-to-b from-[#3737A4] to-[#0C0C4F] text-transparent bg-clip-text text-center">
               Leaderboard — {leaderboardHunt?.title}
             </DialogTitle>
           </DialogHeader>
 
-          <div className="bg-white rounded-2xl p-6 shadow-inner border border-slate-100">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-inner border border-slate-100 dark:border-white/5">
             {leaderboardHunt && (
               <LeaderboardTable huntId={leaderboardHunt.id} />
             )}
@@ -330,16 +330,16 @@ export function HuntDashboard({ hunts, onActivate, onRefresh, onSaveClues }: Hun
 
           <div className="space-y-3 max-h-[60vh] overflow-y-auto pr-1">
             <div className="grid grid-cols-[1fr_1fr_56px_32px] gap-2 px-1">
-              <span className="text-xs font-medium text-slate-500">Riddle / Question</span>
-              <span className="text-xs font-medium text-slate-500">Answer</span>
-              <span className="text-xs font-medium text-slate-500">Points</span>
+              <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Riddle / Question</span>
+              <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Answer</span>
+              <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Points</span>
               <span />
             </div>
 
             {clueRows.map((row, index) => (
               <div key={row.id} className="grid grid-cols-[1fr_1fr_56px_32px] gap-2 items-center">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-xs text-slate-400 shrink-0 w-4">{index + 1}.</span>
+                  <span className="text-xs text-slate-400 dark:text-slate-500 shrink-0 w-4">{index + 1}.</span>
                   <Input
                     placeholder="e.g. What has keys but no locks?"
                     value={row.question}
@@ -375,7 +375,7 @@ export function HuntDashboard({ hunts, onActivate, onRefresh, onSaveClues }: Hun
             ))}
           </div>
 
-          <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+          <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-white/10">
             <Button
               type="button"
               variant="outline"

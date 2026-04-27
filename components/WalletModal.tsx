@@ -52,7 +52,7 @@ export function WalletModal({ isOpen, onClose, onConnect }: WalletModalProps) {
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader className="flex flex-row items-center justify-between">
-          <DialogTitle className="text-slate-800 font-semibold">
+          <DialogTitle className="text-slate-800 dark:text-slate-100 font-semibold">
             Connect a wallet
           </DialogTitle>
           <Button
@@ -69,7 +69,7 @@ export function WalletModal({ isOpen, onClose, onConnect }: WalletModalProps) {
           <Button
             onClick={() => handleConnect("freighter")}
             disabled={connecting}
-            className="w-full bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-white p-4 rounded-xl flex items-center gap-3 justify-start h-auto"
+            className="w-full bg-slate-800 dark:bg-slate-900 hover:bg-slate-700 dark:hover:bg-slate-800 disabled:opacity-50 text-white p-4 rounded-xl flex items-center gap-3 justify-start h-auto border border-white/5"
           >
             <span className="text-2xl">🚀</span>
             <div className="text-left flex-1">
@@ -85,7 +85,7 @@ export function WalletModal({ isOpen, onClose, onConnect }: WalletModalProps) {
           <Button
             onClick={() => handleConnect("albedo")}
             disabled={connecting}
-            className="w-full bg-indigo-700 hover:bg-indigo-600 disabled:opacity-50 text-white p-4 rounded-xl flex items-center gap-3 justify-start h-auto"
+            className="w-full bg-indigo-700 dark:bg-indigo-900 hover:bg-indigo-600 dark:hover:bg-indigo-800 disabled:opacity-50 text-white p-4 rounded-xl flex items-center gap-3 justify-start h-auto border border-white/5"
           >
             <span className="text-2xl">✨</span>
             <div className="text-left flex-1">
@@ -101,7 +101,7 @@ export function WalletModal({ isOpen, onClose, onConnect }: WalletModalProps) {
           <Button
             onClick={() => handleConnect("rabet")}
             disabled={connecting}
-            className="w-full bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50 text-white p-4 rounded-xl flex items-center gap-3 justify-start h-auto"
+            className="w-full bg-emerald-700 dark:bg-emerald-900 hover:bg-emerald-600 dark:hover:bg-emerald-800 disabled:opacity-50 text-white p-4 rounded-xl flex items-center gap-3 justify-start h-auto border border-white/5"
           >
             <span className="text-2xl">🟢</span>
             <div className="text-left flex-1">
@@ -117,14 +117,14 @@ export function WalletModal({ isOpen, onClose, onConnect }: WalletModalProps) {
 
           {/* Waiting hint */}
           {connecting && (
-            <p className="text-center text-sm text-slate-500">
+            <p className="text-center text-sm text-slate-500 dark:text-slate-400">
               Approve the connection request in your wallet…
             </p>
           )}
 
           {/* Error message */}
           {error && (
-            <div className="rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-700">
+            <div className="rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/30 p-3 text-sm text-red-700 dark:text-red-400">
               {error}
               {error.includes("not found") && (
                 <a

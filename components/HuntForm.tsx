@@ -138,12 +138,12 @@ export function HuntForm({ hunt, onUpdate, onRemove, huntId, onCluesSaved }: Hun
             onClick={() => setShowPreview(!showPreview)}
             variant="outline"
             size="sm"
-            className="flex gap-1 text-slate-600 hover:text-slate-800"
+            className="flex gap-1 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
           >
             {showPreview ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             {showPreview ? "Hide Preview" : "Preview"}
           </Button>
-          <Button onClick={onRemove} variant="ghost" size="sm" className="text-red-500 hover:text-red-700 flex gap-0.5">
+          <Button onClick={onRemove} variant="ghost" size="sm" className="text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 flex gap-0.5">
             <Minus />
             Remove
           </Button>
@@ -151,8 +151,8 @@ export function HuntForm({ hunt, onUpdate, onRemove, huntId, onCluesSaved }: Hun
       </div>
 
       {showPreview && (
-        <div className="bg-slate-50 rounded-xl p-4 border border-slate-200 print:bg-white print:border-none print:p-0">
-          <p className="text-xs text-slate-500 mb-3 font-medium print:hidden">Live Preview</p>
+        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 border border-slate-200 dark:border-white/5 print:bg-white print:border-none print:p-0">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mb-3 font-medium print:hidden">Live Preview</p>
           <div className="flex justify-center print:block">
             <HuntCards
               hunts={[{
@@ -220,7 +220,7 @@ export function HuntForm({ hunt, onUpdate, onRemove, huntId, onCluesSaved }: Hun
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <span className="text-xl font-semibold">Add Link</span>
+          <span className="text-xl font-semibold dark:text-slate-200">Add Link</span>
           <div className="flex gap-2">
             <ToggleSwitch
               isActive={linkEnabled}
@@ -238,7 +238,7 @@ export function HuntForm({ hunt, onUpdate, onRemove, huntId, onCluesSaved }: Hun
       </div>
 
       {/* Clues section */}
-      <div className="space-y-3 pt-4 border-t border-slate-200">
+      <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-white/10">
         <div className="flex items-center justify-between">
           <span className="text-xl font-semibold bg-gradient-to-b from-[#3737A4] to-[#0C0C4F] text-transparent bg-clip-text">
             Clues
@@ -256,9 +256,9 @@ export function HuntForm({ hunt, onUpdate, onRemove, huntId, onCluesSaved }: Hun
 
         <div className="space-y-2">
           {fields.map((field, index) => (
-            <div key={field.id} className="flex flex-col gap-2 p-2 border border-slate-100 rounded-lg">
+            <div key={field.id} className="flex flex-col gap-2 p-2 border border-slate-100 dark:border-white/5 rounded-lg bg-white/50 dark:bg-slate-900/50">
               <div className="flex gap-2 items-center">
-                <span className="text-xs text-slate-400 w-4 shrink-0">{index + 1}.</span>
+                <span className="text-xs text-slate-400 dark:text-slate-500 w-4 shrink-0">{index + 1}.</span>
                 <div className="flex-1 flex flex-col">
                   <Controller
                     control={control}

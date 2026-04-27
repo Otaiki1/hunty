@@ -10,6 +10,17 @@ import Replay from "@/components/icons/Replay"
 import { RewardsPanel } from "@/components/RewardsPanel"
 import { useQuery } from "@tanstack/react-query"
 import { checkRegistrationStatus } from "@/lib/contracts/player-registration"
+import { useRef, useState } from "react"
+import { AchievementCertificate } from "@/components/AchievementCertificate"
+import { downloadElementAsImage, shareOnTwitter, shareOnFarcaster } from "@/lib/downloadAsImage"
+import { Share2, Twitter, Download } from "lucide-react"
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu"
+import { toast } from "sonner"
 
 interface GameCompleteModalProps {
   isOpen: boolean
@@ -32,6 +43,9 @@ export function GameCompleteModal({
   huntId,
   playerAddress,
 }: GameCompleteModalProps) {
+  const certificateRef = useRef<HTMLDivElement>(null)
+  const [isGenerating, setIsGenerating] = useState(false)
+
   const { data: registrationStatus } = useQuery({
     queryKey: ["registrationStatus", huntId, playerAddress],
     queryFn: () => (huntId && playerAddress ? checkRegistrationStatus(huntId, playerAddress) : null),
@@ -53,6 +67,33 @@ export function GameCompleteModal({
       });
     }
   }, [isOpen]);
+
+  const handleShareAchievement = async (platform?: "twitter" | "farcaster") => {
+    if (!certificateRef.current) return
+
+    setIsGenerating(true)
+    try {
+      // First download the image
+      const filename = `hunty-achievement-${huntId}.png`
+      await downloadElementAsImage(certificateRef.current, { filename })
+      
+      const shareText = `I just completed "${registrationStatus?.progressData?.hunt_id ? `Hunt #${huntId}` : "a Scavenger Hunt"}" on @huntyapp! Check it out:`
+      const shareUrl = typeof window !== "undefined" ? `${window.location.origin}/hunt/${huntId}` : "https://hunty.app"
+
+      if (platform === "twitter") {
+        shareOnTwitter(shareText, shareUrl)
+      } else if (platform === "farcaster") {
+        shareOnFarcaster(shareText, shareUrl)
+      } else {
+        toast.success("Achievement image downloaded! You can now share it manually.")
+      }
+    } catch (error) {
+      console.error("Failed to share achievement:", error)
+      toast.error("Failed to generate achievement image.")
+    } finally {
+      setIsGenerating(false)
+    }
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -101,9 +142,53 @@ export function GameCompleteModal({
               <Replay /> Replay
             </Button>
           </div>
-          <Button onClick={onViewLeaderboard} className="w-full bg-gradient-to-b from-[#FFD43E] to-[#EC7F00] text-white text-xl font-black cursor-pointer rounded-xl">
-            See Leaderboard
-          </Button>
+          <div className="flex flex-col gap-3 pt-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  disabled={isGenerating}
+                  className="w-full border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 rounded-xl flex items-center gap-2 h-11"
+                >
+                  {isGenerating ? "Generating..." : (
+                    <>
+                      <Share2 className="w-4 h-4" />
+                      Share Achievement
+                    </>
+                  )}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center" className="w-[200px] rounded-xl">
+                <DropdownMenuItem onClick={() => handleShareAchievement("twitter")} className="flex items-center gap-2 cursor-pointer py-2.5">
+                  <Twitter className="w-4 h-4 text-sky-500" />
+                  Share on Twitter / X
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleShareAchievement("farcaster")} className="flex items-center gap-2 cursor-pointer py-2.5">
+                  <Image src="/icons/farcaster.png" alt="Farcaster" width={16} height={16} className="opacity-70" />
+                  Share on Farcaster
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleShareAchievement()} className="flex items-center gap-2 cursor-pointer py-2.5 border-t mt-1">
+                  <Download className="w-4 h-4 text-slate-500" />
+                  Download Image Only
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <Button onClick={onViewLeaderboard} className="w-full bg-gradient-to-b from-[#FFD43E] to-[#EC7F00] text-white text-xl font-black cursor-pointer rounded-xl h-11">
+              See Leaderboard
+            </Button>
+          </div>
+        </div>
+
+        {/* Hidden Achievement Certificate for Capture */}
+        <div className="fixed left-[-9999px] top-0 pointer-events-none">
+          <AchievementCertificate
+            ref={certificateRef}
+            playerName={playerAddress ? `${playerAddress.slice(0, 6)}...${playerAddress.slice(-4)}` : "Explorer"}
+            huntTitle={registrationStatus?.progressData?.hunt_id ? `Hunt #${huntId}` : "Scavenger Hunt"}
+            points={reward}
+            rank={1} // Defaulting to 1 for now or we can get rank from leaderboard
+          />
         </div>
       </DialogContent>
     </Dialog>

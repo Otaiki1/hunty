@@ -123,9 +123,9 @@ export const HuntCards: React.FC<HuntCardsProps> = ({
           <Skeleton className="h-3 sm:h-4 w-5/6 mb-4 bg-white/20" />
           <Skeleton className="w-[140px] sm:w-[180px] h-[140px] sm:h-[180px] rounded-md bg-white/20" />
         </div>
-        <div className="bg-white flex gap-2 p-4 sm:p-6 rounded-b-xl sm:rounded-b-2xl items-center">
-          <Skeleton className="flex-1 h-9 sm:h-10 rounded-full bg-gray-200" />
-          <Skeleton className="h-9 sm:h-10 w-[60px] sm:w-[72px] rounded-lg sm:rounded-xl bg-gray-200" />
+        <div className="bg-white dark:bg-slate-900 flex gap-2 p-4 sm:p-6 rounded-b-xl sm:rounded-b-2xl items-center">
+          <Skeleton className="flex-1 h-9 sm:h-10 rounded-full bg-gray-200 dark:bg-slate-800" />
+          <Skeleton className="h-9 sm:h-10 w-[60px] sm:w-[72px] rounded-lg sm:rounded-xl bg-gray-200 dark:bg-slate-800" />
         </div>
       </div>
     );
@@ -134,7 +134,7 @@ export const HuntCards: React.FC<HuntCardsProps> = ({
   const isLocked = !isActive || preview || isPending || solved;
 
   return (
-    <div className={`rounded-xl sm:rounded-2xl shadow-lg w-full max-w-[400px] transition-all duration-300 relative print:shadow-none print:border-none print:max-w-none print:scale-100 print:m-0 print:opacity-100 ${isActive ? "sm:scale-105 border-2 border-blue-400" : preview ? "opacity-70" : "opacity-90"}`}>
+    <div className={`rounded-xl sm:rounded-2xl shadow-lg w-full max-w-[400px] transition-all duration-300 relative print:shadow-none print:border-none print:max-w-none print:scale-100 print:m-0 print:opacity-100 ${isActive ? "sm:scale-105 border-2 border-blue-400 dark:border-blue-500" : preview ? "opacity-70" : "opacity-90"} bg-white dark:bg-slate-900`}>
       {solved && (
         <div className="absolute inset-0 bg-green-500/10 rounded-xl sm:rounded-2xl z-20 flex items-center justify-center pointer-events-none print:hidden">
           <CheckCircle2 className="w-12 sm:w-16 h-12 sm:h-16 text-green-500 opacity-60" />
@@ -175,20 +175,20 @@ export const HuntCards: React.FC<HuntCardsProps> = ({
       </div>
 
       {hunt.hint && !solved && (
-        <div className="bg-white px-4 sm:px-6 py-2 border-b border-gray-100 print:hidden">
+        <div className="bg-white dark:bg-slate-900 px-4 sm:px-6 py-2 border-b border-gray-100 dark:border-white/5 print:hidden">
           {!hintRevealed ? (
             <Button
               variant="outline"
               size="sm"
-              className="w-full text-xs sm:text-sm text-blue-600 hover:text-blue-700 hover:bg-blue-50 border-blue-200 py-2 sm:py-2.5"
+              className="w-full text-xs sm:text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 border-blue-200 dark:border-blue-900/50 py-2 sm:py-2.5"
               onClick={() => setHintRevealed(true)}
               disabled={isLocked}
             >
               Reveal Hint (-{hunt.hintCost || 0} pts)
             </Button>
           ) : (
-            <div className="bg-blue-50 text-blue-800 p-2 sm:p-3 rounded-lg sm:rounded-xl text-xs sm:text-sm border border-blue-100">
-              <span className="font-semibold text-blue-900 mr-2">Hint:</span>
+            <div className="bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300 p-2 sm:p-3 rounded-lg sm:rounded-xl text-xs sm:text-sm border border-blue-100 dark:border-blue-900/30">
+              <span className="font-semibold text-blue-900 dark:text-blue-200 mr-2">Hint:</span>
               {hunt.hint}
             </div>
           )}
@@ -196,11 +196,11 @@ export const HuntCards: React.FC<HuntCardsProps> = ({
       )}
 
       {/* Print button */}
-      <div className="bg-white px-4 sm:px-6 pt-2 sm:pt-3 print:hidden">
+      <div className="bg-white dark:bg-slate-900 px-4 sm:px-6 pt-2 sm:pt-3 print:hidden">
         <Button
           variant="outline"
           size="sm"
-          className="w-full text-xs sm:text-sm text-slate-600 hover:text-[#3737A4] hover:bg-slate-50 border-slate-200 py-2 sm:py-2.5"
+          className="w-full text-xs sm:text-sm text-slate-600 dark:text-slate-400 hover:text-[#3737A4] dark:hover:text-blue-400 hover:bg-slate-50 dark:hover:bg-white/5 border-slate-200 dark:border-white/10 py-2 sm:py-2.5"
           onClick={() => window.print()}
         >
           <Printer className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
@@ -209,10 +209,10 @@ export const HuntCards: React.FC<HuntCardsProps> = ({
       </div>
 
       {/* Input and button only for active, non-preview cards */}
-      <div className="bg-white flex gap-2 p-4 sm:p-6 rounded-b-xl sm:rounded-b-2xl items-center print:hidden">
+      <div className="bg-white dark:bg-slate-900 flex gap-2 p-4 sm:p-6 rounded-b-xl sm:rounded-b-2xl items-center print:hidden">
         <Input
           placeholder={isActive && !preview ? "Enter answer" : "Locked"}
-          className={`flex-1 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-full text-sm transition-colors ${isLocked ? "bg-gray-100 cursor-not-allowed" : ""}`}
+          className={`flex-1 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-full text-sm transition-colors ${isLocked ? "bg-gray-100 dark:bg-slate-800 cursor-not-allowed" : "dark:bg-slate-950 dark:border-white/10"}`}
           value={input}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
@@ -232,18 +232,18 @@ export const HuntCards: React.FC<HuntCardsProps> = ({
       </div>
 
       {/* Feedback */}
-      <div className="bg-white rounded-b-xl sm:rounded-b-2xl -mt-4 pb-4 px-4 sm:px-6 min-h-[36px] print:hidden">
+      <div className="bg-white dark:bg-slate-900 rounded-b-xl sm:rounded-b-2xl -mt-4 pb-4 px-4 sm:px-6 min-h-[36px] print:hidden">
         {success && (
-          <div className="flex items-center justify-center gap-2 text-green-600 font-bold text-sm sm:text-base animate-bounce">
+          <div className="flex items-center justify-center gap-2 text-green-600 dark:text-green-400 font-bold text-sm sm:text-base animate-bounce">
             <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
             Correct!
           </div>
         )}
         {!success && isPending && (
-          <p className="text-center text-slate-400 text-xs sm:text-sm">Verifying on-chain…</p>
+          <p className="text-center text-slate-400 dark:text-slate-500 text-xs sm:text-sm">Verifying on-chain…</p>
         )}
         {!success && !isPending && error && (
-          <p className="text-center text-red-500 font-semibold text-xs sm:text-sm">{error}</p>
+          <p className="text-center text-red-500 dark:text-red-400 font-semibold text-xs sm:text-sm">{error}</p>
         )}
       </div>
     </div>

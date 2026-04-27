@@ -29,10 +29,10 @@ interface WalletOption {
 
 const walletOptions: WalletOption[] = []
 
-// Active hunts for the public Game Arcade (Draft hunts become visible here after activation).
+// Active and Completed hunts for the public Game Arcade.
 // Private hunts (is_private=true) are excluded from the public arcade.
 function fetchAllHunts() {
-  return getAllHunts().filter((h) => h.status === "Active" && !h.is_private)
+  return getAllHunts().filter((h) => (h.status === "Active" || h.status === "Completed") && !h.is_private)
 }
 
 export default function GameArcade() {
@@ -45,7 +45,9 @@ export default function GameArcade() {
 
   const [searchQuery, setSearchQuery] = useState("")
   const [activeTab, setActiveTab] = useState<"leaderboard" | "none">("none")
-  const [rewardFilter, setRewardFilter] = useState<"all" | "XLM" | "NFT">("all")
+  const [rewardFilter, setRewardFilter] = useState<"all" | "XLM" | "NFT" | "Both">("all")
+  const [statusFilter, setStatusFilter] = useState<"all" | "Active" | "Completed">("Active")
+  const [sortBy, setSortBy] = useState<"newest" | "oldest" | "clues-high" | "clues-low">("newest")
 
   const { data: hunts = [], isLoading: isLoadingHunts } = useQuery({
     queryKey: ["activeHunts"],
@@ -78,18 +80,30 @@ export default function GameArcade() {
     window.location.href = "/hunty"
   }
 
-  const filteredHunts = hunts.filter((hunt) => {
-    const matchesSearch =
-      hunt.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      hunt.description.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    const matchesReward =
-      rewardFilter === "all" ||
-      hunt.rewardType === rewardFilter ||
-      hunt.rewardType === "Both";
-
-    return matchesSearch && matchesReward;
-  });
+  const filteredHunts = hunts
+    .filter((hunt) => {
+      const matchesSearch =
+        hunt.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        hunt.description.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      const matchesReward =
+        rewardFilter === "all" ||
+        hunt.rewardType === rewardFilter ||
+        (rewardFilter !== "Both" && hunt.rewardType === "Both") ||
+        (rewardFilter === "Both" && hunt.rewardType === "Both");
+  
+      const matchesStatus =
+        statusFilter === "all" || hunt.status === statusFilter;
+  
+      return matchesSearch && matchesReward && matchesStatus;
+    })
+    .sort((a, b) => {
+      if (sortBy === "newest") return (b.startTime || 0) - (a.startTime || 0);
+      if (sortBy === "oldest") return (a.startTime || 0) - (b.startTime || 0);
+      if (sortBy === "clues-high") return b.cluesCount - a.cluesCount;
+      if (sortBy === "clues-low") return a.cluesCount - b.cluesCount;
+      return 0;
+    });
 
   return (
     <div
@@ -233,35 +247,79 @@ export default function GameArcade() {
 
         {/* Active Hunts Grid */}
         <div className="mt-10">
-          <div className="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
-            <h2 className="text-2xl md:text-3xl font-semibold bg-gradient-to-b from-[#3737A4] to-[#0C0C4F] bg-clip-text text-transparent">
-              Browse Active Hunts
-            </h2>
-            <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
-              <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
-                {(["all", "XLM", "NFT"] as const).map((type) => (
+          <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-6 border-b border-slate-100 dark:border-white/5 pb-8">
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-b from-[#3737A4] to-[#0C0C4F] bg-clip-text text-transparent">
+                Discovery Arcade
+              </h2>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Find the perfect challenge for you</p>
+            </div>
+            
+            <div className="flex flex-col xl:flex-row items-center gap-4 w-full md:w-auto">
+              {/* Status Filter */}
+              <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl w-full sm:w-auto">
+                {(["all", "Active", "Completed"] as const).map((status) => (
+                  <button
+                    key={status}
+                    onClick={() => setStatusFilter(status)}
+                    className={`flex-1 px-4 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
+                      statusFilter === status
+                        ? "bg-white dark:bg-slate-700 text-[#3737A4] shadow-sm"
+                        : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+                    }`}
+                  >
+                    {status === "all" ? "All" : status === "Active" ? "Live" : "Ended"}
+                  </button>
+                ))}
+              </div>
+
+              {/* Reward Filter */}
+              <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl w-full sm:w-auto">
+                {(["all", "XLM", "NFT", "Both"] as const).map((type) => (
                   <button
                     key={type}
                     onClick={() => setRewardFilter(type)}
-                    className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-all ${
+                    className={`flex-1 px-4 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
                       rewardFilter === type
                         ? "bg-white dark:bg-slate-700 text-[#3737A4] shadow-sm"
                         : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
                     }`}
                   >
-                    {type === "all" ? "All Rewards" : type}
+                    {type === "all" ? "All Prizes" : type}
                   </button>
                 ))}
               </div>
-              <Input
-                placeholder="Search hunts..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="max-w-md bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 focus:border-[#3737A4] focus:ring-[#3737A4]"
-              />
-              <p className="text-sm text-slate-600 dark:text-slate-400 whitespace-nowrap hidden sm:block">
-                {isLoadingHunts ? "Loading hunts..." : `${filteredHunts.length} active ${filteredHunts.length === 1 ? "hunt" : "hunts"} found`}
-              </p>
+
+              {/* Search and Sort */}
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <div className="relative flex-1 sm:w-64">
+                  <Input
+                    placeholder="Search title..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 focus:border-[#3737A4] focus:ring-[#3737A4] pl-3 h-10 rounded-xl"
+                  />
+                </div>
+                
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as any)}
+                  className="h-10 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 text-xs font-bold text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-[#3737A4]/50 cursor-pointer"
+                >
+                  <option value="newest">Newest First</option>
+                  <option value="oldest">Oldest First</option>
+                  <option value="clues-high">Most Clues</option>
+                  <option value="clues-low">Fewest Clues</option>
+                </select>
+              </div>
+
+              {isLoadingHunts ? (
+                <Skeleton className="h-4 w-24 bg-slate-200 dark:bg-slate-700" />
+              ) : (
+                <p className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider hidden xl:block">
+                  {filteredHunts.length} result{filteredHunts.length === 1 ? "" : "s"}
+                </p>
+              )}
             </div>
           </div>
 
