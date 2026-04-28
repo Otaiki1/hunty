@@ -1,13 +1,12 @@
-import { View, Text, Button, StyleSheet } from 'react-native';
-import { Link } from 'expo-router';
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View } from "react-native";
 
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Hunty Mobile</Text>
-      <Link href="/details" asChild>
-        <Button title="Go to Details Screen" />
-      </Link>
+      <Text style={styles.subtitle}>Expo Router is configured and ready.</Text>
+      <StatusBar style="dark" />
     </View>
   );
 }
@@ -15,13 +14,20 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#ffffff",
+    paddingHorizontal: 24,
+    gap: 8,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 24,
+    fontSize: 28,
+    fontWeight: "700",
+    color: "#111827",
+  },
+  subtitle: {
+    fontSize: 15,
+    textAlign: "center",
+    color: "#4b5563",
   },
 });
