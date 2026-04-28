@@ -2,9 +2,10 @@ import { useEffect } from 'react';
 import { BackHandler, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Stack, type ErrorBoundaryProps, useRouter } from 'expo-router';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
-import ReactQueryProvider from '../providers/ReactQueryProvider';
+import { hideSplashScreen } from '@utils/splashScreenManager';
+import { useTheme } from '@providers/ThemeProvider';
+import { ThemedCustomText, ThemedButton } from '@components/themed';
 
 export const unstable_settings = {
   initialRouteName: 'index',
@@ -15,11 +16,18 @@ export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
     <SafeAreaProvider>
       <SafeAreaView style={styles.safeArea} edges={['top', 'right', 'bottom', 'left']}>
         <View style={styles.errorContainer}>
-          <Text style={styles.errorTitle}>Something went wrong</Text>
-          <Text style={styles.errorMessage}>{error.message || 'Unexpected navigation error.'}</Text>
-          <Pressable style={styles.retryButton} onPress={retry}>
-            <Text style={styles.retryButtonText}>Try again</Text>
-          </Pressable>
+          <ThemedCustomText variant="h2" style={styles.errorTitle}>
+            Something went wrong
+          </ThemedCustomText>
+          <ThemedCustomText variant="body" style={styles.errorMessage}>
+            {error.message || 'Unexpected navigation error.'}
+          </ThemedCustomText>
+          <ThemedButton
+            text="Try again"
+            onPress={retry}
+            variant="primary"
+            size="md"
+          />
         </View>
       </SafeAreaView>
     </SafeAreaProvider>
@@ -28,12 +36,13 @@ export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
 
 export default function RootLayout() {
   const router = useRouter();
+  const { colors, isDark } = useTheme();
 
   const [loaded, error] = useFonts();
 
   useEffect(() => {
     if (loaded || error) {
-      SplashScreen.hideAsync();
+      hideSplashScreen();
     }
   }, [loaded, error]);
 
@@ -56,34 +65,33 @@ export default function RootLayout() {
   }
 
   return (
-    <ReactQueryProvider>
-      <SafeAreaProvider>
-        <SafeAreaView style={styles.safeArea} edges={['top', 'right', 'bottom', 'left']}>
-          <Stack
-            screenOptions={{
-              headerStyle: {
-                backgroundColor: '#f4511e',
-              },
-              headerTintColor: '#fff',
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-              contentStyle: styles.content,
-            }}
-          />
-        </SafeAreaView>
-      </SafeAreaProvider>
-    </ReactQueryProvider>
+    <SafeAreaProvider>
+      <SafeAreaView 
+        style={[styles.safeArea, { backgroundColor: colors.background }]} 
+        edges={['top', 'right', 'bottom', 'left']}
+      >
+        <Stack
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: colors.primary,
+            },
+            headerTintColor: '#ffffff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              color: '#ffffff',
+            },
+            contentStyle: { backgroundColor: colors.background },
+            statusBarStyle: isDark ? 'light' : 'dark',
+          }}
+        />
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#ffffff',
-  },
-  content: {
-    backgroundColor: '#ffffff',
   },
   errorContainer: {
     flex: 1,
@@ -93,25 +101,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   errorTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#111827',
     textAlign: 'center',
   },
   errorMessage: {
-    fontSize: 14,
-    color: '#374151',
     textAlign: 'center',
-  },
-  retryButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 8,
-    backgroundColor: '#111827',
-  },
-  retryButtonText: {
-    color: '#ffffff',
-    fontSize: 14,
-    fontWeight: '600',
   },
 });
